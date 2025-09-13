@@ -1,5 +1,5 @@
 class TRoutes {
-  static const responsiveDesignScreen = '/responsive-design-screen';
+  static const responsiveDesignScreen = '/responsive-design-screens';
   static const login = '/login';
   static const forgetPassword = '/forget-password';
   static const resetPassword = '/reset-password';

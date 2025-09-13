@@ -20,7 +20,7 @@ class TDataTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // Set the height of the data table to 80% of the screen height
+      // Set the height of the data table to 80% of the screens height
       height: MediaQuery.of(context).size.height * 0.8,
       child: DataTable2(
         // Assign the provided columns to the data table

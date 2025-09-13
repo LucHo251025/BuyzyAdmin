@@ -5,9 +5,9 @@ import '../../common/widgets/loaders/circular_loader.dart';
 import '../constants/colors.dart';
 import '../helpers/helper_functions.dart';
 
-/// A utility class for managing a full-screen loading dialog.
+/// A utility class for managing a full-screens loading dialog.
 class TFullScreenLoader {
-  /// Open a full-screen loading dialog with a given text and animation.
+  /// Open a full-screens loading dialog with a given text and animation.
   /// This method doesn't return anything.
   ///
   /// Parameters:

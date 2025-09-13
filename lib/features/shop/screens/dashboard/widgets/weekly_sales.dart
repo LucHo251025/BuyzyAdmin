@@ -30,48 +30,50 @@ class TWeeklySalesGraph extends StatelessWidget {
           ),
           SizedBox(
             height: 400,
-            child: BarChart(BarChartData(
-                titlesData: buildFlTitlesData(),
-                borderData: FlBorderData(
-                    show: false,
-                    border: Border(
-                        top: BorderSide.none,
-                        right: BorderSide.none)),
-                gridData: FlGridData(
-                    show: true,
-                    drawHorizontalLine: true,
-                    drawVerticalLine: true,
-                    horizontalInterval: 200),
-                barGroups: controller.weeklySales
-                    .asMap()
-                    .entries
-                    .map(
-                        (entry) =>
-                        BarChartGroupData(
-                            x: entry.key,
-                            barRods: [
-                              BarChartRodData(
-                                  toY: entry.value,
-                                  color: TColors.primary,
-                                  width: 30,
-                                  borderRadius: BorderRadius
-                                      .circular(
-                                      TSizes.sm))
-                            ]))
-                    .toList(),
-                groupsSpace: TSizes.spaceBtwItems,
-                barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                        getTooltipColor: (_) =>
-                        TColors.secondary
-                    ),
-                    touchCallback: TDeviceUtils
-                        .isDesktopScreen(context)
-                        ? (barToolEvent,
-                        barTouchResponse) {}
-                        : null
-                )
-            )
+            child: Obx(
+                () => BarChart(BarChartData(
+                  titlesData: buildFlTitlesData(),
+                  borderData: FlBorderData(
+                      show: false,
+                      border: Border(
+                          top: BorderSide.none,
+                          right: BorderSide.none)),
+                  gridData: FlGridData(
+                      show: true,
+                      drawHorizontalLine: true,
+                      drawVerticalLine: true,
+                      horizontalInterval: 200),
+                  barGroups: controller.weeklySales
+                      .asMap()
+                      .entries
+                      .map(
+                          (entry) =>
+                          BarChartGroupData(
+                              x: entry.key,
+                              barRods: [
+                                BarChartRodData(
+                                    toY: entry.value,
+                                    color: TColors.primary,
+                                    width: 30,
+                                    borderRadius: BorderRadius
+                                        .circular(
+                                        TSizes.sm))
+                              ]))
+                      .toList(),
+                  groupsSpace: TSizes.spaceBtwItems,
+                  barTouchData: BarTouchData(
+                      touchTooltipData: BarTouchTooltipData(
+                          getTooltipColor: (_) =>
+                          TColors.secondary
+                      ),
+                      touchCallback: TDeviceUtils
+                          .isDesktopScreen(context)
+                          ? (barToolEvent,
+                          barTouchResponse) {}
+                          : null
+                  )
+              )
+              ),
             ),
           )
         ],

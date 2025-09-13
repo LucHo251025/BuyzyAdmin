@@ -1,0 +1,192 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:get/get.dart';
+import 'package:universal_html/html.dart' as html;
+import 'package:yt_ecommerce_admin_panel/common/widgets/containers/rounded_container.dart';
+import 'package:yt_ecommerce_admin_panel/common/widgets/images/t_rounded_image.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/controller/media_controller.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/models/image_model.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/screens/media/widgets/folder_dropdown.dart';
+import 'package:yt_ecommerce_admin_panel/utils/constants/enums.dart';
+import 'package:yt_ecommerce_admin_panel/utils/constants/image_strings.dart';
+import 'package:yt_ecommerce_admin_panel/utils/constants/sizes.dart';
+import 'package:yt_ecommerce_admin_panel/utils/device/device_utility.dart';
+
+import '../../../../../utils/constants/colors.dart';
+
+class MediaUploader extends StatelessWidget {
+  const MediaUploader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = MediaController.instance;
+    return Obx(() => controller.showImagesUploaderSection.value
+        ? Column(
+            children: [
+              TRoundedContainer(
+                height: 250,
+                showBorder: true,
+                borderColor: TColors.borderPrimary,
+                backgroundColor: TColors.primaryBackground,
+                padding: EdgeInsets.all(TSizes.defaultSpace),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        DropzoneView(
+                          mime: ['image/jpeg', 'image/png'],
+                          cursor: CursorType.Default,
+                          operation: DragOperation.copy,
+                          onLoaded: () => print('Zone loaded'),
+                          onError: (ev) => print('Zone Error: $ev'),
+                          onHover: () => print('Zone hovered'),
+                          onLeave: () => print('Zone left'),
+                          onCreated: (ctrl) =>
+                              controller.dropzoneViewController = ctrl,
+                          onDropInvalid: (ev) =>
+                              print('Zone invalid MIME : $ev'),
+                          onDropMultiple: (ev) =>
+                              print('Zone drop multiple: $ev'),
+                          onDropFile: (DropzoneFileInterface file) async {
+                            final bytes = await controller.dropzoneViewController.getFileData(file);
+
+                            final image = ImageModel(
+                              url: '',
+                              file: file,
+                              folder: '',
+                              filename: file.name,
+                              localImageToDisplay: bytes, // dùng trực tiếp
+                            );
+                            controller.selectedImagesToUpload.add(image);
+                          },
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Image.asset(
+                              TImages.defaultMultiImageIcon,
+                              width: 50,
+                              height: 50,
+                            ),
+                            SizedBox(
+                              height: TSizes.spaceBtwItems,
+                            ),
+                            Text('Drag and Drop Images here'),
+                            SizedBox(
+                              height: TSizes.spaceBtwItems,
+                            ),
+                            OutlinedButton(
+                                onPressed: () async {
+                                  await controller.selectLocalImages();
+                                }, child: Text('Select Images'))
+                          ],
+                        )
+                      ],
+                    ))
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: TSizes.spaceBtwItems,
+              ),
+              if (controller.selectedImagesToUpload.isNotEmpty)
+                TRoundedContainer(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Select Folder",
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall,
+                              ),
+                              SizedBox(
+                                width: TSizes.spaceBtwItems,
+                              ),
+                              MediaFolderDropdown(
+                                onChanged: (MediaCategory? newValue) {
+                                  if (newValue != null) {
+                                    controller.selectedPath.value = newValue;
+                                  }
+                                },
+                              )
+                            ],
+                          ),
+
+                          //Upload and Remove All Buttons
+                          Row(
+                            children: [
+                              TextButton(
+                                  onPressed: () {}, child: Text("Remove All")),
+                              SizedBox(
+                                width: TSizes.spaceBtwItems,
+                              ),
+                              TDeviceUtils.isMobileScreen(context)
+                                  ? SizedBox.shrink()
+                                  : SizedBox(
+                                      width: TSizes.buttonWidth,
+                                      child: ElevatedButton(
+                                          onPressed: () => controller.uploadImagesConfirmation(),
+                                          child: Text("Upload")),
+                                    )
+                            ],
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: TSizes.spaceBtwSections,
+                      ),
+                      Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: TSizes.spaceBtwItems / 2,
+                        runSpacing: TSizes.spaceBtwItems / 2,
+                        children: controller.selectedImagesToUpload
+                            .where((image) => image.localImageToDisplay != null)
+                            .map((element) => TRoundedImage(
+                                  width: 90,
+                                  height: 90,
+                                  padding: TSizes.sm,
+                                  imageType: ImageType.memory,
+                                  memoryImage: element.localImageToDisplay,
+                                  backgroundColor: TColors.primaryBackground,
+                                ))
+                            .toList(),
+                      ),
+                      SizedBox(
+                        height: TSizes.spaceBtwSections,
+                      ),
+                      TDeviceUtils.isMobileScreen(context)
+                          ? SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                  onPressed: () {}, child: Text('Upload File')),
+                            )
+                          : SizedBox.shrink()
+                    ],
+                  ),
+                ),
+              SizedBox(
+                height: TSizes.spaceBtwSections,
+              ),
+              TDeviceUtils.isMobileScreen(context)
+                  ? SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: () {}, child: Text('Upload')),
+                    )
+                  : SizedBox.shrink()
+            ],
+          )
+        : SizedBox.shrink());
+  }
+}

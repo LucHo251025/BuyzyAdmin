@@ -4,20 +4,19 @@ import 'package:yt_ecommerce_admin_panel/app.dart';
 import 'package:yt_ecommerce_admin_panel/features/authentication/screens/forget_password/forget_password.dart';
 import 'package:yt_ecommerce_admin_panel/features/authentication/screens/login/login.dart';
 import 'package:yt_ecommerce_admin_panel/features/authentication/screens/reset_password/reset_password.dart';
+import 'package:yt_ecommerce_admin_panel/features/media/screens/media/media.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/dashboard.dart';
 import 'package:yt_ecommerce_admin_panel/routes/routes.dart';
 
 import 'routes_middleware.dart';
 
 class TAppRoute {
-
   static final List<GetPage> pages = [
     GetPage(
       name: TRoutes.login,
       page: () => const LoginScreen(),
       // middlewares: [TRoutesMiddleware()],
     ),
-
     GetPage(
       name: TRoutes.forgetPassword,
       page: () => const ForgetPasswordScreen(),
@@ -33,5 +32,10 @@ class TAppRoute {
       page: () => const Dashboard(),
       middlewares: [TRoutesMiddleware()],
     ),
+    GetPage(
+      name: TRoutes.media,
+      page: () => MediaScreen(),
+      middlewares: [TRoutesMiddleware()],
+    )
   ];
 }

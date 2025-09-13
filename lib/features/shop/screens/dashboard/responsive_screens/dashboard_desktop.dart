@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yt_ecommerce_admin_panel/common/widgets/containers/rounded_container.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/controllers/dashbroad/dashboard_controller.dart';
+import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/table/data_table.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/dashboard_card.dart';
+import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/order_status_graph.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/weekly_sales.dart';
 import 'package:yt_ecommerce_admin_panel/utils/constants/colors.dart';
 import 'package:yt_ecommerce_admin_panel/utils/constants/sizes.dart';
@@ -68,6 +70,7 @@ class DashboardDesktop extends StatelessWidget {
                 ),
                 //Graphs
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       flex: 2,
@@ -79,11 +82,27 @@ class DashboardDesktop extends StatelessWidget {
                             height: TSizes.spaceBtwSections,
                           ),
                           // Order
-                          TRoundedContainer()
+                          TRoundedContainer(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Recent Orders',style: Theme.of(context).textTheme.headlineSmall,),
+                                SizedBox(height: TSizes.spaceBtwSections,),
+                                DashboardOrderTable()
+                              ],
+                            ),
+                          )
                         ],
                       ),
+
                     ),
-                    TRoundedContainer()
+                    SizedBox(
+                      width: TSizes.spaceBtwSections,
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: OrderStatusGraph(),
+                    ),
                   ],
                 )
               ],

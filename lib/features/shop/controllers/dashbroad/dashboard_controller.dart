@@ -6,22 +6,23 @@ import 'package:yt_ecommerce_admin_panel/utils/helpers/helper_functions.dart';
 class DashBoardController extends GetxController {
   static DashBoardController get instance => Get.find();
 
-  final RxList<double> weeklySales = <double>[150, 200, 100, 250, 180, 220, 170].obs;
-
+  final RxList<double> weeklySales = <double>[].obs;
+  final RxMap<OrderStatus, int> orderStatusData = <OrderStatus, int>{}.obs;
+  final RxMap<OrderStatus, double> totalAmounts = <OrderStatus,double>{}.obs;
   static final List<OrderModel> orders = [
     OrderModel(
       id: 'CWT0012',
       status: OrderStatus.processing,
       totalAmount: 265,
-      orderDate: DateTime(2024, 5, 20),
-      deliveryDate: DateTime(2024, 5, 20),
+      orderDate: DateTime.now(),
+      deliveryDate: DateTime.now(),
     ),
     OrderModel(
       id: 'CWT0025',
       status: OrderStatus.shipped,
       totalAmount: 369,
-      orderDate: DateTime(2024, 5, 21),
-      deliveryDate: DateTime(2024, 5, 21),
+      orderDate: DateTime.now(),
+      deliveryDate: DateTime.now(),
     ),
     OrderModel(
       id: 'CWT0152',
@@ -47,7 +48,8 @@ class DashBoardController extends GetxController {
   ];
   @override
   void onInit() {
-    // TODO: implement onInit
+    _calculateWeeklySales();
+    _calculateOrderStatusData();
     super.onInit();
   }
 
@@ -55,8 +57,10 @@ class DashBoardController extends GetxController {
       weeklySales.value = List<double>.filled(7, 0.0);
 
       for( var order in orders) {
+        //Lấy ngày bắt đầu tuần của đơn hàng
         final DateTime orderWeekStart = THelperFunctions.getStartOfWeek(order.orderDate);
 
+        //Kiểm tra đơn hàng có thuộc tuần hiện tại không
         if(orderWeekStart.isBefore(DateTime.now()) && orderWeekStart.add(const Duration(days: 7)).isAfter(DateTime.now())) {
           int index = (order.orderDate.weekday -1) % 7;
 
@@ -68,5 +72,39 @@ class DashBoardController extends GetxController {
         }
       }
       print('Weekly Sales: $weeklySales');
+  }
+
+  void _calculateOrderStatusData() {
+
+    orderStatusData.clear();
+
+    totalAmounts.value = { for(var status in OrderStatus.values) status : 0.0 };
+
+    for(var order in orders) {
+
+      final status = order.status;
+      // Đếm số đơn hàng theo trạng thái
+      orderStatusData[status] = (orderStatusData[status] ?? 0) + 1;
+
+      // Tổng tiền theo trạng thái
+      totalAmounts[status] = (totalAmounts[status] ?? 0) + order.totalAmount;
+    }
+  }
+
+  String getDisplayStatusName(OrderStatus status) {
+    switch (status) {
+      case OrderStatus.pending:
+        return 'Pending';
+      case OrderStatus.processing:
+        return 'Processing';
+      case OrderStatus.shipped:
+        return 'Shipped';
+      case OrderStatus.delivered:
+        return 'Delivered';
+      case OrderStatus.cancelled:
+        return 'Cancelled';
+      default:
+        return 'Unknown';
+    }
   }
 }

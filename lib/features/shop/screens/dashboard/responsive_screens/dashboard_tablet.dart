@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:yt_ecommerce_admin_panel/common/widgets/containers/rounded_container.dart';
+import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/table/data_table.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/dashboard_card.dart';
+import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/order_status_graph.dart';
+import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/weekly_sales.dart';
 import 'package:yt_ecommerce_admin_panel/utils/constants/sizes.dart';
 
 class DashboardTablet extends StatelessWidget {
@@ -8,65 +12,88 @@ class DashboardTablet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Dashboard',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .headlineLarge,
-                ),
-                SizedBox(
-                  height: TSizes.spaceBtwSections,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: TDashboardCard(
-                          title: "Sales total",
-                          subTitle: '\$234.45',
-                          stats: 23,
-                        )),
-                    SizedBox(
-                      width: TSizes.spaceBtwItems,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Dashboard',
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .headlineLarge,
+                  ),
+                  SizedBox(
+                    height: TSizes.spaceBtwSections,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: TDashboardCard(
+                            title: "Sales total",
+                            subTitle: '\$234.45',
+                            stats: 23,
+                          )),
+                      SizedBox(
+                        width: TSizes.spaceBtwItems,
+                      ),
+                      Expanded(
+                          child: TDashboardCard(
+                            title: "Sales total",
+                            subTitle: '\$234.45',
+                            stats: 213,
+                          )),
+                    ],
+                  ),
+                  SizedBox(
+                    height: TSizes.spaceBtwItems,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: TDashboardCard(
+                            title: "Sales total",
+                            subTitle: '\$234.45',
+                            stats: 23,
+                          )),
+                      SizedBox(
+                        width: TSizes.spaceBtwItems,
+                      ),
+                      Expanded(
+                          child: TDashboardCard(
+                            title: "Sales total",
+                            subTitle: '\$234.45',
+                            stats: 213,
+                          )),
+                    ],
+                  ),
+          
+                  SizedBox(height: TSizes.spaceBtwSections,),
+          
+                  // Bar  Graph
+                  TWeeklySalesGraph(),
+                  SizedBox(height: TSizes.spaceBtwSections,),
+          
+                  // Order Status Graph
+                  TRoundedContainer(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Recent Orders',style: Theme.of(context).textTheme.headlineSmall,),
+                        SizedBox(height: TSizes.spaceBtwSections,),
+                        DashboardOrderTable()
+                      ],
                     ),
-                    Expanded(
-                        child: TDashboardCard(
-                          title: "Sales total",
-                          subTitle: '\$234.45',
-                          stats: 213,
-                        )),
-                  ],
-                ),
-                SizedBox(
-                  height: TSizes.spaceBtwItems,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                        child: TDashboardCard(
-                          title: "Sales total",
-                          subTitle: '\$234.45',
-                          stats: 23,
-                        )),
-                    SizedBox(
-                      width: TSizes.spaceBtwItems,
-                    ),
-                    Expanded(
-                        child: TDashboardCard(
-                          title: "Sales total",
-                          subTitle: '\$234.45',
-                          stats: 213,
-                        )),
-                  ],
-                ),
-
-              ],
+                  ),
+                  SizedBox(height: TSizes.spaceBtwSections,),
+                  
+                  OrderStatusGraph()
+          
+                ],
+              ),
             ),
           ),
         )
