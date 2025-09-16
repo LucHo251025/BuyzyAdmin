@@ -56,7 +56,8 @@ class ImageModel {
       'mediaCategory': mediaCategory,
       'filename': filename,
       'fullPath': fullPath,
-      'createdAt': createdAt?.toUtc(),
+      'createdAt': FieldValue
+          .serverTimestamp(),
       'contentType': contentType,
     };
   }
@@ -91,8 +92,8 @@ class ImageModel {
       folder: folder,
       sizeBytes: data['bytes'],
       filename: fileName,
-      fullPath: data['public_id'],         // Cloudinary public_id giống như fullPath
-      createdAt: DateTime.tryParse(data['created_at'] ?? ''),
+      fullPath: data['public_id'],
+      createdAt: DateTime.tryParse(data['created_at'] ?? ''), // ✅ Cloudinary date string
       updatedAt: DateTime.tryParse(data['created_at'] ?? ''), // Cloudinary không có updatedAt, mình dùng createdAt
       contentType: data['format'],         // jpg, png,...
       mediaCategory: folder,

@@ -127,7 +127,7 @@ class MediaUploader extends StatelessWidget {
                           Row(
                             children: [
                               TextButton(
-                                  onPressed: () {}, child: Text("Remove All")),
+                                  onPressed: (){}, child: Text("Remove All")),
                               SizedBox(
                                 width: TSizes.spaceBtwItems,
                               ),

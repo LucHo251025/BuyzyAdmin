@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yt_ecommerce_admin_panel/common/widgets/containers/rounded_container.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/controllers/dashbroad/dashboard_controller.dart';
+import 'package:yt_ecommerce_admin_panel/features/shop/controllers/product/product_images_controller.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/table/data_table.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/dashboard_card.dart';
 import 'package:yt_ecommerce_admin_panel/features/shop/screens/dashboard/widgets/order_status_graph.dart';
@@ -17,7 +18,7 @@ class DashboardDesktop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(DashBoardController());
+    final controller = Get.put(ProductImagesController());
 
     return Scaffold(
         body: Padding(
@@ -33,6 +34,11 @@ class DashboardDesktop extends StatelessWidget {
                       .textTheme
                       .headlineLarge,
                 ),
+                ElevatedButton(onPressed: () => controller.selectThumbnailImages(), child: Text('Select Single Image')),
+                SizedBox(
+                  height: TSizes.spaceBtwSections,
+                ),
+                ElevatedButton(onPressed: () => controller.selectMultipleProductImages(), child: Text('Select Multiple Single Image')),
                 SizedBox(
                   height: TSizes.spaceBtwSections,
                 ),

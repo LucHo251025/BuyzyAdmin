@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:yt_ecommerce_admin_panel/data/repositories/cloudinary_service.dart';
 import 'package:yt_ecommerce_admin_panel/features/media/models/image_model.dart';
+import 'package:yt_ecommerce_admin_panel/utils/constants/enums.dart';
 
 class MediaRepository extends GetxController {
   static MediaRepository get instance => Get.find();
@@ -49,4 +52,66 @@ class MediaRepository extends GetxController {
       throw e.toString();
     }
   }
+
+  Future<List<ImageModel>> fetchImagesFromDatabase(
+      MediaCategory mediaCategory, int loadCount) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Images')
+          .where('mediaCategory', isEqualTo: mediaCategory.name.toString())
+          // .orderBy('createdAt', descending: true)
+          .limit(loadCount)
+          .get();
+      return querySnapshot.docs.map((e) => ImageModel.fromSnapshot(e)).toList();
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } on SocketException catch (e) {
+      throw e.message;
+    } on PlatformException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<List<ImageModel>> loadMoreImagesFromDatabase(
+      MediaCategory mediaCategory,
+      int loadCount,
+      DateTime lastFetchedDate) async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('Images')
+          .where('mediaCategory', isEqualTo: mediaCategory.name.toString())
+          // .orderBy('createdAt', descending: true)
+          .startAfter([lastFetchedDate])
+          .limit(loadCount)
+          .get();
+
+      return querySnapshot.docs.map((e) => ImageModel.fromSnapshot(e)).toList();
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } on SocketException catch (e) {
+      throw e.message;
+    } on PlatformException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
+  Future<void> deleteFileFromStorage(ImageModel image) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Images')
+          .doc(image.id)
+          .delete();
+    } on SocketException catch (e) {
+      throw e.message;
+    } on PlatformException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
+
 }
